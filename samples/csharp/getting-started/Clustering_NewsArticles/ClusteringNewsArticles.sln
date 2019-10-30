@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29411.138
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusteringNewsArticles.Train", "ClusteringNewsArticles.Train\ClusteringNewsArticles.Train.csproj", "{EE6C2387-D712-4383-B451-CB4F1261EBE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusteringNewsArticles.Perdict", "ClusteringNewsArticles.Perdict\ClusteringNewsArticles.Perdict.csproj", "{351DC3EE-5749-4AA4-941E-85638184E269}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusteringNewsArticles.Predict", "ClusteringNewsArticles.Predict\ClusteringNewsArticles.Predict.csproj", "{351DC3EE-5749-4AA4-941E-85638184E269}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

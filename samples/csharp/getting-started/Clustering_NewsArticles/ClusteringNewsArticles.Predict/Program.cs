@@ -3,7 +3,7 @@ using System.IO;
 using Common;
 using Microsoft.ML;
 
-namespace ClusteringNewsArticles.Perdict
+namespace ClusteringNewsArticles.Predict
 {
     class Program
     {

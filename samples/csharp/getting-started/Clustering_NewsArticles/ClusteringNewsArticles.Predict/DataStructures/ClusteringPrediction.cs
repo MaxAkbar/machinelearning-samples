@@ -1,6 +1,6 @@
 ﻿using Microsoft.ML.Data;
 
-namespace ClusteringNewsArticles.Perdict.DataStructures
+namespace ClusteringNewsArticles.Predict.DataStructures
 {
     public class ClusteringPrediction
     {

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using ClusteringNewsArticles.Perdict.DataStructures;
+using ClusteringNewsArticles.Predict.DataStructures;
 using Common;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using OxyPlot;
 using OxyPlot.Series;
 
-namespace ClusteringNewsArticles.Perdict
+namespace ClusteringNewsArticles.Predict
 {
     public class ClusteringModelScorer
     {
@@ -43,8 +43,8 @@ namespace ClusteringNewsArticles.Perdict
                     new TextLoader.Column("news_articles", DataKind.String, 0),
                     new TextLoader.Column("category", DataKind.String, 1)
                 }, ',', true);
-            var tranfomedDataView = _trainedModel.Transform(data);
-            var predictions = _mlContext.Data.CreateEnumerable<ClusteringPrediction>(tranfomedDataView, false).ToArray();
+            var transformedDataView = _trainedModel.Transform(data);
+            var predictions = _mlContext.Data.CreateEnumerable<ClusteringPrediction>(transformedDataView, false).ToArray();
 
             SaveNewsArticlesClusterCsv(predictions, _csvLocation);
             SaveNewsArticlesClusterPlotChart(predictions, _plotLocation);
