@@ -27,7 +27,7 @@ To solve this problem, first we will build and train an ML model. Then we will u
 
 ### 1. Build model
 
-Building a model includes: uploading data (`iris-full.txt` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm (with `Concatenate`), and choosing a learning algorithm (`KMeans`). All of those steps are stored in `trainingPipeline`:
+Building a model includes: uploading data (`newsarticles.csv` with `TextLoader`), transforming the data so it can be used effectively by an ML algorithm, and choosing a learning algorithm (`KMeans`). All of those steps are stored in `trainingPipeline`:
 ```CSharp
 //Create the MLContext to share across components for deterministic results
 MLContext mlContext = new MLContext(seed: 1);  //Seed set to any number so you have a deterministic environment
