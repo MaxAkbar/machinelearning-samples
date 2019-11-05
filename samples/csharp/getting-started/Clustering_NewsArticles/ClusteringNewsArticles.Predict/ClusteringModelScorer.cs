@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using Common;
+using OxyPlot;
 using System.IO;
 using System.Linq;
-using ClusteringNewsArticles.Predict.DataStructures;
-using Common;
 using Microsoft.ML;
-using Microsoft.ML.Data;
-using OxyPlot;
 using OxyPlot.Series;
+using Microsoft.ML.Data;
+using System.Diagnostics;
+using System.Collections.Generic;
+using ClusteringNewsArticles.Predict.DataStructures;
 
 namespace ClusteringNewsArticles.Predict
 {
@@ -30,14 +30,14 @@ namespace ClusteringNewsArticles.Predict
 
         public ITransformer LoadModel(string modelPath)
         {
-            _trainedModel = _mlContext.Model.Load(modelPath, out var modelInputSchema);
-            
+            _trainedModel = _mlContext.Model.Load(modelPath, out _);
+
             return _trainedModel;
         }
 
         public void CreateNewsArticlesCluster()
         {
-            var data = _mlContext.Data.LoadFromTextFile(path: _newsDataLocation, 
+            var data = _mlContext.Data.LoadFromTextFile(path: _newsDataLocation,
                 new[]
                 {
                     new TextLoader.Column("news_articles", DataKind.String, 0),
@@ -55,16 +55,19 @@ namespace ClusteringNewsArticles.Predict
         {
             ConsoleHelper.ConsoleWriteHeader("CSV News Articles Cluster");
 
-            using (var w = new StreamWriter(csvLocation))
+            using var w = new StreamWriter(csvLocation);
+
+            w.WriteLine("news_articles,SelectedClusterId");
+            w.Flush();
+
+            predictions.ToList().ForEach(delegate (ClusteringPrediction prediction)
             {
-                w.WriteLine("news_articles,SelectedClusterId");
-                w.Flush();
-                predictions.ToList().ForEach(delegate (ClusteringPrediction prediction)
+                if (w != null)
                 {
                     w.WriteLine($"{prediction.NewsArticles},{prediction.SelectedClusterId},{prediction.Category}");
                     w.Flush();
-                });
-            }
+                }
+            });
 
             Console.WriteLine("CSV location: " + csvLocation);
         }
@@ -77,12 +80,13 @@ namespace ClusteringNewsArticles.Predict
                 Title = "News Articles Clusters",
                 IsLegendVisible = true
             };
-            var clusters = predictions.Select(p => p.SelectedClusterId).Distinct().OrderBy(x => x);
+            var clusteringPredictions = predictions as ClusteringPrediction[] ?? predictions.ToArray();
+            var clusters = clusteringPredictions.Select(p => p.SelectedClusterId).Distinct().OrderBy(x => x);
 
             foreach (var cluster in clusters)
             {
                 var scatter = new ScatterSeries { MarkerType = MarkerType.Circle, MarkerStrokeThickness = 2, Title = $"Cluster: {cluster}", RenderInLegend = true };
-                var series = predictions
+                var series = clusteringPredictions
                     .Where(p => p.SelectedClusterId == cluster)
                     .Select(p => new ScatterPoint(p.Location[0], p.Location[1])).ToArray();
                 scatter.Points.AddRange(series);
@@ -92,7 +96,7 @@ namespace ClusteringNewsArticles.Predict
             plot.DefaultColors = OxyPalettes.HueDistinct(plot.Series.Count).Colors;
 
             var exporter = new SvgExporter { Width = 600, Height = 400 };
-            using (var fs = new System.IO.FileStream(plotLocation, System.IO.FileMode.Create))
+            using (var fs = new FileStream(plotLocation, FileMode.Create))
             {
                 exporter.Export(plot, fs);
             }
@@ -103,7 +107,7 @@ namespace ClusteringNewsArticles.Predict
         private static void OpenChartInDefaultWindow(string plotLocation)
         {
             Console.WriteLine("Showing chart...");
-            
+
             var p = new Process
             {
                 StartInfo = new ProcessStartInfo(plotLocation)

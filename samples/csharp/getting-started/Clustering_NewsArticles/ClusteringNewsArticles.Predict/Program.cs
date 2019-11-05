@@ -1,13 +1,13 @@
 ﻿using System;
-using System.IO;
 using Common;
+using System.IO;
 using Microsoft.ML;
 
 namespace ClusteringNewsArticles.Predict
 {
     class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             var assetsPath = Program.GetAbsolutePath("assets");
             var newsCsv = Path.Combine(assetsPath, "inputs", "newsArticles.csv");
@@ -33,8 +33,13 @@ namespace ClusteringNewsArticles.Predict
         public static string GetAbsolutePath(string relativePath)
         {
             var dataRoot = new FileInfo(typeof(Program).Assembly.Location);
-            var assemblyFolderPath = dataRoot.Directory.Parent.Parent.Parent.FullName;
-            return Path.Combine(assemblyFolderPath, relativePath);
+            if (dataRoot.Directory?.Parent?.Parent?.Parent != null)
+            {
+                var assemblyFolderPath = dataRoot.Directory.Parent.Parent.Parent.FullName;
+                return Path.Combine(assemblyFolderPath, relativePath);
+            }
+
+            throw new DirectoryNotFoundException();
         }
     }
 }
